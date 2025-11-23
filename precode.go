@@ -49,7 +49,7 @@ func main() {
 
 	// 3. Создание контекста
 
-	parentContext, parentCancel := context.WithCancel(context.Background())
+	parentContext, parentCancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer parentCancel()
 
 	// для проверки будем считать количество и сумму отправленных чисел
@@ -126,17 +126,10 @@ func main() {
 
 	// 5. Читаем числа из результирующего канала
 	// ...
-	const MuxNumber = 100
-	processedCount := 0
 
 	for num := range chOut {
 		sum += num
 		count++
-		processedCount++
-		if processedCount == MuxNumber {
-			parentCancel()
-			break
-		}
 	}
 
 	fmt.Println("Количество чисел", inputCount, count)
